@@ -38,3 +38,18 @@ client.on('message', async(message) => {
 })
 
 client.login(TOKEN);
+
+const express = require('express');
+const app = new express();
+const http = require('http').Server(app);
+
+app.use(express.static('public'))
+app.set('view engine', 'ejs');
+
+
+app.get('/', function(req, res){
+   res.render('index.ejs');
+});
+
+app.listen(3000);
+console.log('Express started on port 3000');
