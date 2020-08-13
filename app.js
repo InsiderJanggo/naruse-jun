@@ -2,7 +2,9 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const fs = require('fs');
 const {Client,Collection} = require('discord.js');
-const {TOKEN,PREFIX} = require('./config');
+const {
+    TOKEN,PREFIX,OAuth2_URL,PERM_CODE,SCOPE,CLIENT_ID,CLIENT_SECRET,REDIRECT_URL
+} = require('./config');
 
 client.queue = new Map(); //For Music Queue List
 client.commands = new Collection();
@@ -39,17 +41,63 @@ client.on('message', async(message) => {
 
 client.login(TOKEN);
 
-const express = require('express');
-const app = new express();
-const http = require('http').Server(app);
 
-app.use(express.static('public'))
-app.set('view engine', 'ejs');
+const http = require('http');
+const url = require('url');
+const fetch = require('node-fetch');
+
+let port = 3000;
 
 
-app.get('/', function(req, res){
-   res.render('index.ejs');
-});
+http.createServer((req, res) => {
+	let responseCode = 404;
+	let content = '404 Error';
 
-app.listen(3000);
-console.log('Express started on port 3000');
+	const urlObj = url.parse(req.url, true);
+
+	if (urlObj.query.code) {
+		const accessCode = urlObj.query.code;
+		const data = {
+			client_id: CLIENT_ID,
+			client_secret: CLIENT_SECRET,
+			grant_type: PERM_CODE,
+			redirect_uri: REDIRECT_URL,
+			code: accessCode,
+			scope: SCOPE,
+		};
+
+		fetch('https://discordapp.com/api/oauth2/token', {
+			method: 'POST',
+			body: new URLSearchParams(data),
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+		})
+			.then(discordRes => discordRes.json())
+			.then(info => {
+				console.log(info);
+				return info;
+			})
+			.then(info => fetch('https://discordapp.com/api/users/@me', {
+				headers: {
+					authorization: `${info.token_type} ${info.access_token}`,
+				},
+			}))
+			.then(userRes => userRes.json())
+			.then(console.log);
+	}
+
+	if (urlObj.pathname === '/') {
+		responseCode = 200;
+		content = fs.readFileSync('./views/index.ejs');
+	}
+
+	res.writeHead(responseCode, {
+		'content-type': 'text/html;charset=utf-8',
+	});
+
+	res.write(content);
+    res.end();  
+})
+    .listen(port);
+    console.log(`Listening To Port ${port}`)
