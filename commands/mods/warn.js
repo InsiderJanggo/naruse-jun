@@ -8,15 +8,28 @@ module.exports =  {
     usage: "<mention> <reason>",
     run: async(bot,message,args) => {
         let user = message.mentions.users.first();
-        let ico = user.displayAvatarURL();
+        if(!message.member.hasPermission("MANAGE_MESSAGES")) return message.reply("You don't have premission to do that!");
         let botico = bot.user.displayAvatarURL();
         let reason = args.join(" ").slice(22);
-        if(!user) return message.channel.send(`${mesage.author} Please Mention A User`);
-        if(!reason) return message.channel.send("Please Provided A Reason");
+        if (message.mentions.users.size < 1) return message.reply('You must mention someone to warn them.');
+        if (reason.length < 1) return message.reply('You must have a reason for the warning.');
+
+    
+        let userembed = new MessageEmbed()
+        .setTitle("Warn")
+        .setColor("PURPLE")
+        .setDescription(`You have been warned on \`${message.guild.name}\``)
+        .setTimestamp()
+        .addField("Warned by", message.author.tag)
+        .addField("Reason", reason)
+        .setAuthor("Naruse Jun", botico);
+        user.send(userembed);
+
+        message.delete();
+
         let embed = new MessageEmbed()
         .setTitle("Warned")
         .setColor("YELLOW")
-        .setThumbnail(ico)
         .setTimestamp()
         .setDescription(`${user} Has Been Warned Because ${reason}`)
         .setAuthor("Naruse Jun", botico)
