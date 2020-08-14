@@ -18,6 +18,7 @@
     "express-session": "^1.17.1",
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
+    "mongoose": "^5.9.29",
     "ms": "^2.1.2",
     "node-superfetch": "^0.1.10",
     "nodemon": "^2.0.4",
