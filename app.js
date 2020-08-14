@@ -3,7 +3,8 @@ const client = new Discord.Client();
 const fs = require('fs');
 const {Client,Collection} = require('discord.js');
 const {
-    TOKEN,PREFIX,OAuth2_URL,PERM_CODE,SCOPE,CLIENT_ID,CLIENT_SECRET,REDIRECT_URL
+    TOKEN,PREFIX,OAuth2_URL,PERM_CODE,SCOPE,CLIENT_ID,CLIENT_SECRET,REDIRECT_URL,
+    MY_SQL_HOST,MY_SQL_DATA,MY_SQL_PASS,MY_SQL_USER,MONGODB_DATA,MONGODB_HOST,MONGODB_PASS,MONGODB_USER
 } = require('./config');
 
 client.queue = new Map(); //For Music Queue List
@@ -61,3 +62,14 @@ app.use(session({
 }));
 require('./router')(app);
 app.listen(port, () => console.info(`Listening on port ${port}`));
+
+
+const mysql = require('mysql');
+const mongoose = require('mongoose');
+
+// set up the mysql account info
+const con = mysql.createConnection({
+    host: MY_SQL_HOST,
+    user: MY_SQL_USER,
+    password: MY_SQL_PASS
+});

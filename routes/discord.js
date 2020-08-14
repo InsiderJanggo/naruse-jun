@@ -53,6 +53,10 @@ router.get('/callback', (req, res) => {
     });
 });
 
+router.get('/me',(req, res) => {
+
+});
+
 router.get('/logout', forceAuth, (req, res) => {
     req.session.destroy();
 });
