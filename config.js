@@ -7,5 +7,14 @@ module.exports = {
     PERM_CODE: "",
     CLIENT_ID: "",
     CLIENT_SECRET: "",
-    REDIRECT_URL: "http://localhost:3000" 
+    REDIRECT_URL: "http://localhost:3000",
+     MY_SQL_HOST: "localhost",
+    MY_SQL_USER: "root",
+    MY_SQL_PASS: "",
+    MY_SQL_DATA: "",
+    MONGODB_HOST: "localhost",
+    MONGODB_USER: "",
+    MONGODB_PASS: "",
+    MONGODB_DATA: "",
+    LEVEL_XP: ""
 }
