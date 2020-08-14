@@ -18,7 +18,7 @@ client.event = new Collection();
 
 client.on('ready', () => {
     console.log(`Logged In As ${client.user.username}`)
-    client.user.setActivity("n!", {type: "STREAMING", url: "https://twitch.tv/mrjanggo858"})
+    client.user.setActivity("n! | narusejun.xyz", {type: "STREAMING", url: "https://twitch.tv/mrjanggo858"})
 });
 
 client.on('message', async(message) => {

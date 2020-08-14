@@ -4,8 +4,9 @@ const { CLIENT_ID,CLIENT_SECRET,REDIRECT_URL,SCOPE } = require('../config');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 
+
 const forceAuth = (req, res, next) => {
-    if (!req.session.user) return res.redirect('/authorize')
+    if (!req.session.user) return res.redirect('/')
     else return next();
 }
 
@@ -15,6 +16,17 @@ router.get('/', (req, res) => {
     const authorizeUrl = `https://discord.com/api/oauth2/authorize?client_id=731529070608908318&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauthorize%2Fcallback&response_type=code&scope=identify%20guilds`;
     res.redirect(authorizeUrl);
 });
+
+router.get('/me',  (req,res) => {
+    res.render('user.ejs', {
+        status: (req.isAuthenticated() ? `${req.user.username}#${req.user.discriminator}` : "Logout"),
+        client: req.client.server.client.user,
+        user: req.user,
+        guilds: req.user.guilds.filter(u => (u.permissions & 2146958591) === 2146958591),
+        avatarURL:`https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.png`,
+        iconURL:`https://cdn.discordapp.com/avatars/${req.user.id}/${req.user.avatar}.png?size=32`
+    })
+})
 
 router.get('/callback', (req, res) => {
     if (req.session.user) return res.redirect('/');
@@ -53,12 +65,10 @@ router.get('/callback', (req, res) => {
     });
 });
 
-router.get('/me',(req, res) => {
-
-});
-
 router.get('/logout', forceAuth, (req, res) => {
     req.session.destroy();
 });
+
+
 
 module.exports = router;
