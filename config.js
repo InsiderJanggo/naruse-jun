@@ -8,7 +8,7 @@ module.exports = {
     CLIENT_ID: "",
     CLIENT_SECRET: "",
     REDIRECT_URL: "http://localhost:3000",
-     MY_SQL_HOST: "localhost",
+    MY_SQL_HOST: "localhost",
     MY_SQL_USER: "root",
     MY_SQL_PASS: "",
     MY_SQL_DATA: "",
