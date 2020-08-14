@@ -42,62 +42,22 @@ client.on('message', async(message) => {
 client.login(TOKEN);
 
 
-const http = require('http');
-const url = require('url');
-const fetch = require('node-fetch');
+const express = require('express');
+const app = express();
 
 let port = 3000;
 
+app.set('port', port);
 
-http.createServer((req, res) => {
-	let responseCode = 404;
-	let content = '404 Error';
+const session = require('express-session');
 
-	const urlObj = url.parse(req.url, true);
-
-	if (urlObj.query.code) {
-		const accessCode = urlObj.query.code;
-		const data = {
-			client_id: CLIENT_ID,
-			client_secret: CLIENT_SECRET,
-			grant_type: PERM_CODE,
-			redirect_uri: REDIRECT_URL,
-			code: accessCode,
-			scope: SCOPE,
-		};
-
-		fetch('https://discordapp.com/api/oauth2/token', {
-			method: 'POST',
-			body: new URLSearchParams(data),
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded',
-			},
-		})
-			.then(discordRes => discordRes.json())
-			.then(info => {
-				console.log(info);
-				return info;
-			})
-			.then(info => fetch('https://discordapp.com/api/users/@me', {
-				headers: {
-					authorization: `${info.token_type} ${info.access_token}`,
-				},
-			}))
-			.then(userRes => userRes.json())
-			.then(console.log);
-	}
-
-	if (urlObj.pathname === '/') {
-		responseCode = 200;
-		content = fs.readFileSync('./views/index.ejs');
-	}
-
-	res.writeHead(responseCode, {
-		'content-type': 'text/html;charset=utf-8',
-	});
-
-	res.write(content);
-    res.end();  
-})
-    .listen(port);
-    console.log(`Listening To Port ${port}`)
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(session({
+    secret: '48738924783748273742398747238',
+    resave: false,
+    saveUninitialized: false,
+    expires: 604800000,
+}));
+require('./router')(app);
+app.listen(port, () => console.info(`Listening on port ${port}`));
