@@ -4,4 +4,7 @@ module.exports = (app) => {
 
     // '/authorize'
     app.use('/authorize', require('./routes/discord'));
+
+    // '/me'
+    app.use('/me', require('./routes/me'));
 }
